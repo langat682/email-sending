@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TestController;
 
+use App\Http\Controllers\PostGuzzleController;
 // use App\Http\Controllers\UserController;
 
 
@@ -48,26 +49,25 @@ Route::middleware([
 
 
 
-    //Route::get('/users',[App\Http\Controllers\UserController::class, 'users.index']);
+    Route::get('/users',[App\Http\Controllers\UserController::class, 'users.index']);
 });
     Route::get('/users',[App\Http\Controllers\UserController::class, 'index']);
-    Route::get('send/email/view/{id}',[App\Http\Controllers\UserController::class, 'emailView'])->name('send.email.view');
+   // Route::get('send/email/view/{id}',[App\Http\Controllers\UserController::class, 'emailView'])->name('send.email.view');
 
     // all users
-Route::get('/send/mail/view/all', [UserController::class, 'emailViewAll'])->name('send.email.view.all');
+    Route::get('/send/mail/view/all', [UserController::class, 'emailViewAll'])->name('send.email.view.all');
 
-Route::post('/store/email/all', [UserController::class, 'storeAllUserEmail'])->name('store.alluser.email');
-
-
+    Route::post('/store/email/all', [UserController::class, 'storeAllUserEmail'])->name('store.alluser.email');
 
 //single users
-
+Route::post('/store/email/{id}', [UserController::class, 'storeSingleEmail'])->name('store.user.email');
 Route::get('/send/mail/view/{id}', [UserController::class, 'emailView'])->name('send.email.view');
 
-Route::post('/store/email/{id}', [UserController::class, 'storeSingleEmail'])->name('store.user.email');
+
 Route::get('/users/index', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/update', [UserController::class, 'update'])->name('users.update');
+Route::get('/users/update{id}', [UserController::class, 'update'])->name('users.update');
 Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
+
 Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
 Route::get('/users/show/{id}', [UserController::class, 'show'])->name('users.show');
 Route::get('/users/edit/{id}', [UserController::class, 'edit'])->name('users.edit');
@@ -75,6 +75,14 @@ Route::post('/users/destroy/{id}', [UserController::class, 'destroy'])->name('us
 Route::delete('/delete', 'UserController@destroy')->name('delete');
 
 
+
+
+
+
+
+
+Route::get('posts', [PostGuzzleController::class,'index']);
+Route::get('posts/store', [PostGuzzleController::class, 'store']);
 
 
 

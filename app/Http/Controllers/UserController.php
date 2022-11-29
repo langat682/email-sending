@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    protected $mail;
+
+
     public function index()
     {
 
@@ -30,55 +33,81 @@ class UserController extends Controller
 
     // send email to each users
 
+
     public function storeSingleEmail(Request $request, $id)
     {
-
         $user = User::find($id);
         $details = array();
+            $details['name'] = $request->name;
+            $details['email'] = $request->email;
+            $details['subject'] = $request->subject;
+            $details['text'] = $request->text;
 
-        $details['greeting'] = $request->greeting;
-        $details['body'] = $request->body;
-        $details['actiontext'] = $request->actiontext;
-        $details['actionurl'] = $request->actionurl;
-        $details['endtext'] = $request->endtext;
+        if ($this->isOnline()){
+            $mail_data=[
+            'recipient'=>'weslylangat471@gmail.com',
+            'fromEmail'=>$request->email,
+            'fromName'=>$request->name,
+            'subject'=>$request->subject,
+            'body'=>$request->body,
+            ];
 
-        Notification::send($user, new SendEmailNotification($details));
+            \Mail::send('email-template',$mail_data, function($message) use ($mail_data){
 
-        return redirect()->to('/users');
+            $message->to($mail_data['recipient'])
+                    ->from($mail_data['fromEmail'],$mail_data['fromName'])
+                    ->subject($mail_data['subject']);
+
+                });
+            }
+            else{
+            return redirect()->to('/users');
+            }
     }
 
+    public function isOnline($site = "https://youtube.com/")
+    {
+    if(@fopen($site, "r")){
+
+    return true;
+    }else{
+    return false;
+    }
+
+    }
 
     public function emailViewAll()
     {
         return view('users.send_email_all');
     }
 
+
     public function storeAllUserEmail(Request $request)
     {
 
         $users = User::all();
         $details = array();
-        $details['greeting'] = $request->greeting;
-        $details['body'] = $request->body;
-        $details['actiontext'] = $request->actiontext;
-        $details['actionurl'] = $request->actionurl;
-        $details['endtext'] = $request->endtext;
+        $details['Name'] = $request->name;
+        $details['Email'] = $request->email;
+        $details['subject'] = $request->subject;
+        $details['message'] = $request->message;
 
         foreach($users as $user) {
             Notification::send($user, new SendEmailNotification($details));
         }
+
+
+
         return redirect()->to('/users');
     }
 
     //update
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, User $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-        ]);
+        $user = User::find($id);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
 
         $user->update($request->all());
 
@@ -117,9 +146,10 @@ class UserController extends Controller
     }
 
     //edit
-    public function edit(User $user)
+    public function edit($id)
     {
-        return view('users.edit',compact('user'));
+       $user = User::find($id);
+       return view('users.edit',compact('user'));
     }
 
     //destroy

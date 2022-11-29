@@ -1,22 +1,24 @@
 @extends('users.layout')
 
 @section('content')
+
+<div class="container">
+
     <div class="row">
-        <div class="col-lg-12 margin-tb">
+        <div class="col-md-4">
             <div class="pull-left">
-                <h2> Show User</h2>
+                <h6> Show User</h6>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('users.index') }}"> Back</a>
             </div>
         </div>
-    </div>
 
-    <div class="row">
+    </div>
+      <div class="row">
         <div class="col-md-6">
             <div class="form-group">
                 <label for="example-text-input" class="form-control-label">Name:</label>
-
                 {{ $users->name }}
 
             </div>
@@ -33,4 +35,10 @@
 
         </div>
     </div>
+
+</div>
 @endsection
+
+
+
+
