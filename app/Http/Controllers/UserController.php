@@ -4,9 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 
-
-
-
 use App\Notifications\SendEmailNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
@@ -48,7 +45,7 @@ class UserController extends Controller
 
         if ($this->isOnline()){
             $mail_data=[
-            'recipient'=>'weslylangat471@gmail.com',
+            'recipient'=>'weslylangat69@gmail.com',
             'fromEmail'=>$request->email,
             'fromName'=>$request->name,
             'subject'=>$request->subject,
